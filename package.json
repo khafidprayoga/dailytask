@@ -17,13 +17,19 @@
   "jest": {
     "verbose": true,
     "moduleNameMapper": {
-      "@app": "<rootDir>/src/app.js"
+      "@app": "<rootDir>/src/app.js",
+      "@controllers": "<rootDir>/src/controllers",
+      "@exceptions": "<rootDir>/src/exceptions",
+      "@routes": "<rootDir>/src/routes",
+      "@services": "<rootDir>/src/services",
+      "@validations": "<rootDir>/src/validations"
     }
   },
   "dependencies": {
     "body-parser": "^1.19.2",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "joi": "^17.6.0",
     "node-pg-migrate": "^6.2.1",
     "pg": "^8.7.3"
   },
