@@ -14,6 +14,12 @@
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
     "test:watch:change": "jest --watch --setupFiles dotenv/config -i"
   },
+  "jest": {
+    "verbose": true,
+    "moduleNameMapper": {
+      "@app": "<rootDir>/src/app.js"
+    }
+  },
   "dependencies": {
     "body-parser": "^1.19.2",
     "dotenv": "^16.0.0",
