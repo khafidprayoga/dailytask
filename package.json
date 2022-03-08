@@ -18,11 +18,11 @@
     "verbose": true,
     "moduleNameMapper": {
       "@app": "<rootDir>/src/app.js",
-      "@controllers": "<rootDir>/src/controllers",
-      "@exceptions": "<rootDir>/src/exceptions",
-      "@routes": "<rootDir>/src/routes",
-      "@services": "<rootDir>/src/services",
-      "@validations": "<rootDir>/src/validations"
+      "@controllers/(.*)": "<rootDir>/src/controllers/$1",
+      "@exceptions/(.*)": "<rootDir>/src/exceptions/$1",
+      "@routes/(.*)": "<rootDir>/src/routes/$1",
+      "@services/(.*)": "<rootDir>/src/services/$1",
+      "@validations/(.*)": "<rootDir>/src/validations/$1"
     }
   },
   "dependencies": {
