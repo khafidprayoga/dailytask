@@ -1,0 +1,540 @@
+openapi: 3.0.3
+info:
+  title: DailyTask RESTful API
+  version: 1.0.0
+  contact:
+    name: Khafid Prayoga
+    email: khafidp@pm.me
+    url: https://github.com/khafidprayoga
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://solve.mit.edu/terms-of-service
+  description: |
+    RESTful API ini berfungsi untuk menyimpan tasks harian anda,
+    yang dapat digunakan untuk memanajemen waktu kerja
+    agar pekerjaan dapat lebih terstruktur.
+
+    Berikut merupakan beberapa fitur utama yang akan di implementasikan
+
+    ## Manajemen task
+    1. Dapat menambahkan task {AuthToken}
+    2. Dapat mengambil detail task {taskId}
+    3. Dapat melihat total task keseluruhan yang harus dikerjakan hari ini {AuthToken}
+    4. Dapat mengupdate data task {title, description}
+    5. Dapat menghapus task berdasarkan {taskID}
+    6. *taskId* memiliki value UUID/GUID
+    7. Semua fitur **task** memerlukan *accessToken*
+
+    ## Manajemen users
+    1. Dapat membuat user baru
+    2. Dapat menghapus user dengan jangka waktu 7 hari
+    3. Dapat mengubah metadata {fullName}
+
+    ## Manajemen session
+    1. User dapat melakukan **manajemen task** sesuai hak *accessToken* yang diberikan
+    2. User tidak bisa melakukan manajemen task milik orang lain
+    3. Apabila data salah saat login pastikan pesan "**username atau password salah**"
+    4. User dapat mengupdate *refreshToken*
+    5. User dapat menghapus login *accessToken* demi keamanan
+    6. Masa aktif *accessToken* adalah 1 hari
+
+    ## Register new user
+    1. Guest mengisi form yang diperlukan
+    2. Validasi keunikan username
+    3. Pastikan password benar dengan verify password
+    4. Minimal usia 15 tahun
+    5. Nama harus terdiri hanya huruf a-zA-Z
+servers:
+  - url: https://dailytask.khafidprayoga.my.id/v1
+    description: Public server domain
+  - url: https://localhost:3000/v1
+    description: Development server domain
+  - url: https://localhost:8080/v1
+    description: Masked server domain (behind reverse proxy)
+
+tags:
+  - name: Register
+    description: create new user feature
+  - name: Session
+    description: Login session management
+  - name: Task
+    description: All tasks management feature
+
+paths:
+  /register:
+    post:
+      tags:
+        - "Register"
+      operationId: createNewUser
+      summary: Create new user to use dailytask application
+      description: |
+        Guest (calon pendaftar) akan mengisi form yang diperlukan
+
+        1. First Name (1-32 length)
+        2. Last Name (1-32 length)
+        3. Username (6-16 length)
+        4. Password (8-64 length)
+        5. Birth Date
+
+        Didalam proses tersebut terdapat Validasi
+
+        - ketersediaan username
+        - username menggunakan angka dan huruf (besar kecil)
+        - pastikan umur pendaftar min 15 tahun
+        - pastikan firstname dan lastname menggunakan hanya huruf
+        - verifikasi kesamaan password (**frontend**)
+
+        Parameter request yang ditangani servers:
+        - id user
+        - createdAt datetime ketika user melakukan pendaftaran
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUser"
+            example:
+              firstName: Khafid
+              lastName: Prayoga
+              username: khafidprayoga
+              password: secret
+              birthDate: 2003-06-09
+      responses:
+        201:
+          description: Request processed to create new user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: success
+                message: your requests will be processed immediately
+        406:
+          description: User too young
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: You are too young, your age must be 15 or more
+        409:
+          description: Username already used
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: "Username {username} already used, please choose others"
+        411:
+          description: Guest must fill all required data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: Please fill the required field
+        413:
+          description: Field too larger
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: Your filled field not meet the strings length
+  /login:
+    post:
+      tags:
+        - "Session"
+      operationId: createNewSession
+      summary: User login to make new token
+      description: |
+        User mengisi form data yang diperlukan
+        1. username
+        2. password
+
+        Error yang akan diberikan jika ada kesalahan
+        - username atau password salah
+
+        Return
+        1. accessToken
+        2. refreshToken
+
+        variable token JWT
+        1. userId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginSession"
+            example:
+              username: "khafidprayoga"
+              password: "secret"
+      responses:
+        201:
+          description: Given username and password match, and user exist!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: "success"
+                message: "Welcome! please use this token and keep it secret"
+                data:
+                  accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.E3E_9a5vSVf6puDT4OL-4lHAYVK3yTYYa_fDcuTpBN8"
+                  refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        401:
+          description: Given username and password doesnt match!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: wrong username or password
+        404:
+          description: Given data doesnt exist!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: account doesnt exist!
+    put:
+      tags:
+        - "Session"
+      operationId: updateNewSession
+      summary: Update accessToken with given refreshToken
+      description: |
+        Akan membuat accessToken baru ketika refreshToken masih aktif dan data benar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshSession"
+            example:
+              refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      responses:
+        200:
+          description: Generate new accessToken because refreshToken is exist and alive
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: success
+                message: created new access token
+                data:
+                  accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        400:
+          description: refreshToken invalid or expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: "refresh token invalid or expired"
+  /logout:
+    delete:
+      tags:
+        - "Session"
+      operationId: deleteSession
+      summary: Delete active session from refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshSession"
+            example:
+              refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      responses:
+        200:
+          description: deleted active session from token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: success
+                message: session deleted
+        400:
+          description: refreshToken invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: refreshToken invalid
+  /tasks:
+    get:
+      security:
+        - AuthToken: []
+      tags:
+        - "Task"
+      description: Return created daily tasks for today
+      operationId: getAllTasks
+      responses:
+        200:
+          description: All list daily tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+              example:
+                - id: 97e4a959-bd9c-4666-911a-f3d44ac3300a
+                  title: Membaca Buku
+                  author: khafidprayoga
+                  createdAt: 2022-03-07T08:20:45.380Z
+
+                - id: 97e4a959-bd9c-4666-911a-f3d44ac3300a
+                  title: Belajar NodeJS
+                  author: khafidprayoga
+                  createdAt: 2022-03-07T08:20:45.380Z
+        404:
+          description: Task not found, please add one or more!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: Task not found, please add one!
+    post:
+      security:
+        - AuthToken: []
+      tags:
+        - "Task"
+      description: Add new task
+      operationId: createNewTask
+      responses:
+        201:
+          description: Task created and inserted with valid token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+              example:
+                id: 41cffdf9-64e2-430c-91f6-ae56d699b451
+                title: Read Book
+                description: Bicara Itu Ada Seninya
+                author: khafidprayoga
+                createdAt: 2022-03-07T08:20:45.380Z
+        400:
+          description: All field required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: please fill all required field
+  /task/{taskId}:
+    get:
+      security:
+        - AuthToken: []
+      tags:
+        - "Task"
+      operationId: getDetailsTaskById
+      description: Get details task by specified taskId
+      parameters:
+        - name: taskId
+          in: path
+          example: 41cffdf9-64e2-430c-91f6-ae56d699b451
+          description: task id to get more details
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: task found and get details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+              example:
+                title: Read Book
+                description: Bicara Itu Ada Seninya
+                author: khafidprayoga
+                createdAt: 2022-03-07T08:20:45.380Z
+        404:
+          description: task with given Id not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: "taskId not found"
+    delete:
+      security:
+        - AuthToken: []
+      tags:
+        - "Task"
+      operationId: deleteTaskById
+      description: delete task by id
+      parameters:
+        - name: taskId
+          in: path
+          example: 41cffdf9-64e2-430c-91f6-ae56d699b451
+          description: task id to get more details
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: task found and deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: success
+                message: Task deleted!
+
+        404:
+          description: task with given Id not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseForRequest"
+              example:
+                status: failed
+                message: "task not found"
+components:
+  securitySchemes:
+    AuthToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+          minimum: 1
+          maximum: 255
+        description:
+          type: string
+          minimum: 1
+        author:
+          type: string
+          minimum: 6
+          maximum: 12
+        createdAt:
+          type: string
+          format: date-time
+    NewUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          maxLength: 16
+        firstName:
+          type: string
+          minimum: 1
+          maximum: 32
+        lastName:
+          type: string
+          minimum: 1
+          maximum: 32
+        username:
+          type: string
+          minimum: 6
+          maximum: 16
+        password:
+          type: string
+          format: password
+          minimum: 8
+          maximum: 64
+        birthDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - "firstName"
+        - "lastName"
+        - "username"
+        - "password"
+        - "birthDate"
+    ResponseForRequest:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+      required:
+        - "status"
+        - "message"
+    LoginSession:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+      required:
+        - "username"
+        - "password"
+    RefreshSession:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+    RegisterError:
+      type: array
+      items:
+        type: string
+        enum:
+          - "FieldRequired"
+          - "FieldToLarger"
+          - "UsernameExist"
+          - "AgeNotEnough"
+    PostSessionError:
+      type: array
+      items:
+        type: string
+        enum:
+          - "DataNotMatched"
+          - "AccountNotExist"
+    PutSessionError:
+      type: array
+      items:
+        type: string
+        enum:
+          - "TokenInvalid"
+    DeleteSessionError:
+      type: array
+      items:
+        type: string
+        enum:
+          - "TokenInvalid"
+    GetTaskError:
+      type: array
+      items:
+        type: string
+        enum:
+          - "TaskNotFound"
+    PostTaskError:
+      type: array
+      items:
+        type: string
+        enum:
+          - "FieldRequired"
