@@ -1,0 +1,33 @@
+{
+  "name": "nodejs-boilerplate",
+  "version": "1.0.0",
+  "repository": "git@github.com:khafidprayoga/nodejs-boilerplate.git",
+  "author": "Khafid Prayoga <khafidp@pm.me>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon ./src/bin/http.js",
+    "debug": "DEBUG=express:* nodemon ./src/bin/http.js",
+    "lint": "eslint ./src",
+    "prod": "NODE_ENV=production node ./index.js",
+    "test": "jest --setupFiles dotenv/config -i",
+    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
+    "test:watch:change": "jest --watch --setupFiles dotenv/config -i"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "eslint": "^8.9.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "supertest": "^6.2.2"
+  }
+}
