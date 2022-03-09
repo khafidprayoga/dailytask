@@ -16,6 +16,10 @@
   },
   "jest": {
     "verbose": true,
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/__test__/",
+      "<rootDir>/src/app.js"
+    ],
     "moduleNameMapper": {
       "@app": "<rootDir>/src/app.js",
       "@connections": "<rootDir>/src/services/database/connection.js",
