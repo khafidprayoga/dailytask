@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 
-const { Pool } = require('pg');
-const _pool = new Pool();
+const pool = require('../services/database/connection');
 
 module.exports.testUser = {
   async createNewUser({
@@ -17,12 +16,16 @@ module.exports.testUser = {
       values: [firstName, lastName, username, password, birthDate],
     };
 
-    const result = await _pool.query(sqlSyntax);
+    const result = await pool.query(sqlSyntax);
     if (result) {
       return result.rows[0];
     }
   },
   async deleteUser({ username }) {
-    await _pool.query(`DELETE FROM users WHERE username = ${username}`);
+    const sqlSyntax = {
+      text: 'DELETE FROM users WHERE username = $1',
+      values: [username],
+    };
+    await pool.query(sqlSyntax);
   },
 };
