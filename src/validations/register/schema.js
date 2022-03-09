@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 /**
  * TODO: {RegExp pattern}
- * Minimum eight characters, at least one letter ,number , special char
+ * Minimum eight characters, at least one letter ,number , and special char
  */
 
 const postSchema = Joi.object({

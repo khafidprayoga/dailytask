@@ -2,10 +2,11 @@ const { postSchema } = require('./schema');
 const ValidationError = require('../../exceptions/ValidationError');
 
 const RegisterValidations = {
-  postValidate(payload) {
-    const validationResult = postSchema.validate(payload);
-    if (validationResult.error) {
-      throw new ValidationError(validationResult.error.message);
+  async postValidate(payload) {
+    try {
+      await postSchema.validateAsync(payload);
+    } catch (error) {
+      throw new ValidationError(error.details[0].message);
     }
   },
 };
