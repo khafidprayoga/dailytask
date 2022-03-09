@@ -18,7 +18,9 @@
     "verbose": true,
     "moduleNameMapper": {
       "@app": "<rootDir>/src/app.js",
+      "@connections": "<rootDir>/src/services/database/connection.js",
       "@controllers/(.*)": "<rootDir>/src/controllers/$1",
+      "@helpers/(.*)": "<rootDir>/src/__test__/$1",
       "@exceptions/(.*)": "<rootDir>/src/exceptions/$1",
       "@routes/(.*)": "<rootDir>/src/routes/$1",
       "@services/(.*)": "<rootDir>/src/services/$1",
