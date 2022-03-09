@@ -18,7 +18,6 @@ module.exports.testUser = {
     };
 
     const result = await _pool.query(sqlSyntax);
-    console.log(result);
     if (result) {
       return result.rows[0];
     }
