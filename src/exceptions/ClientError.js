@@ -5,4 +5,5 @@ class ClientError extends Error {
     this.statusCode = statusCode;
   }
 }
+
 module.exports = ClientError;
