@@ -6,7 +6,9 @@ const exceptionsMiddleware = require('./middlewares/exceptions');
 
 app.disable('x-powered-by');
 app.use(json());
-app.use(serverRouter);
+app.use(serverRouter); // mount all registered routes
+
+// If ClientError and ServerError push the error to exceptions middleware
 app.use(exceptionsMiddleware);
 
 module.exports = app;
