@@ -1,11 +1,11 @@
 const exceptionsMiddleware = (error, req, res, next) => {
-  const { message } = error;
+  const { statusCode, message } = error;
 
-  error.statusCode === 400
+  statusCode === 400
     ? res.status(error.statusCode).send({ status: 'failed', message })
     : res
-        .send({ status: 'failed', message: 'Internal Server Error' })
-        .status(500);
+        .status(500)
+        .send({ status: 'failed', message: 'Internal Server Error' });
 };
 
 module.exports = exceptionsMiddleware;
