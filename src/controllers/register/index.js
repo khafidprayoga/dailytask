@@ -9,15 +9,13 @@ module.exports.registerControllers = {
       await RegisterValidations.postValidate(req.body);
       const userId = await services.addUser(req.body);
       const response = {
-        statusCode: 201,
-        status: success,
+        status: 'success',
         message: 'Creating users, your account will be enable immediately!',
         data: {
           userId,
         },
       };
-
-      res.send(response);
+      res.status(201).send(response);
     } catch (error) {
       next(error);
     }
