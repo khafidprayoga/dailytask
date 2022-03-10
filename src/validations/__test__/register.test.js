@@ -22,7 +22,7 @@ describe('/register bodyRequest schema validations', () => {
         lastName: 'Prayoga',
         username: 'khafidprayoga',
         password: 'CBwGD8x8z',
-        birthDate: '1-1-2005',
+        birthDate: '2000-01-31',
       };
 
       await expect(postValidate(bodyRequest)).rejects.toThrow(ValidationError);
@@ -46,7 +46,7 @@ describe('/register bodyRequest schema validations', () => {
       lastName: 'Prayoga',
       username: 'khafidprayoga',
       password: 'CBwGD8x8z',
-      birthDate: '1-1-2005',
+      birthDate: '2000-01-31',
     };
 
     await expect(() => postValidate(bodyRequest)).not.toThrowError(

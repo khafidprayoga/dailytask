@@ -10,7 +10,7 @@ const postSchema = Joi.object({
   lastName: Joi.string().min(1).max(32).required(),
   username: Joi.string().alphanum().min(1).max(32).required(),
   password: Joi.string().alphanum().min(8).max(64).required(),
-  birthDate: Joi.date().less('12-31-2007').required(),
+  birthDate: Joi.date().less('2007-01-01').iso().required(), // ISO 8601 "YYYY-MM-DD"
 });
 
 module.exports = { postSchema };
