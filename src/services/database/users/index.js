@@ -13,7 +13,7 @@ class usersService {
     };
     const result = await this._pool.query(sqlQuery);
     if (result.rowCount) {
-      throw new InvariantError('username exist!');
+      throw new InvariantError('username does not exist! try another...');
     }
   }
   async addUser({ firstName, lastName, username, password, birthDate }) {
