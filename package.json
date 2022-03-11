@@ -8,7 +8,7 @@
     "dev": "nodemon ./src/bin/http.js",
     "debug": "DEBUG=express:* nodemon ./src/bin/http.js",
     "lint": "eslint ./src",
-    "prod": "NODE_ENV=production node ./index.js",
+    "prod": "NODE_ENV=production node ./src/bin/http.js",
     "migrate": "node-pg-migrate -m src/migrations/ --verbose",
     "test": "jest --setupFiles dotenv/config -i",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
