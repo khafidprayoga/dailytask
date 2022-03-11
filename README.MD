@@ -13,13 +13,15 @@ file yang berada di root "/" merupakan file config untuk pembuatan aplikasi, yan
 Berikut ini merupakan fungsi masing-masing domains didalam directory **"src/"**.
 
 ```txt
-/__test__: helpers untuk testing case jest
-/bin: file binary yang diperlukan untuk menjalankan server
+/__test__: helpers untuk testing case jest, misalnya melakukan operations ke DB
+/bin: file binary yang diperlukan untuk menjalankan HTTP Server
 /controllers: berisi handler dari *routes*
-/exceptions: terdapat jenis error sesuai konteks
-/migrations: berisi file migrasi database untuk operasi database
-/routes: daftar path endpoint
-/services: terdapat services yang akan dikonsumsi oleh controllers dan routes
+/exceptions: terdapat jenis instance error yang dimungkinkan
+/middlewares: terdapat middleware local, yang terpisah dari routes.
+/migrations: berisi file migrasi database untuk operasi database, dengan dependency `node-pg-migrate` and `pg`
+/routes: daftar services endpoint yang dihandle oleh `serverRouter`
+/services: terdapat services yang akan dikonsumsi oleh `controllers` dan `routes`
+/utils: terdapat plugins yang dapat menambahkan fungsionalitas `services`
 /validations: validasi schema data untuk HTTP body-request
 app.js: berisi entrypoint dan domains yang akan didaftarkan ke Express.js
 ```
