@@ -1,5 +1,5 @@
 const InvariantError = require('../../../exceptions/InvariantError');
-const { passwordManager } = require('../../../helpers/bcrypt');
+const { passwordManager } = require('../../../utils/bcrypt');
 const pool = require('../connection');
 
 class usersService {
