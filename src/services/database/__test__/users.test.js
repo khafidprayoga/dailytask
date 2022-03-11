@@ -1,4 +1,4 @@
-const usersServices = require('../index');
+const usersServices = require('../users/');
 const pool = require('@connections');
 const { testUser } = require('@helpers/User.js');
 const InvariantError = require('@exceptions/InvariantError');
