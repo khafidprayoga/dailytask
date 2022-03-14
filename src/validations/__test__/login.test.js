@@ -1,5 +1,6 @@
 const ValidationError = require('../../exceptions/ValidationError');
-const { postValidate } = require('../login/');
+const { postValidate, putValidate } = require('../login/');
+const TokenManager = require('@utils/jwt/');
 
 describe('/login bodyRequest validations', () => {
   describe('Post validations schema', () => {
@@ -17,7 +18,22 @@ describe('/login bodyRequest validations', () => {
         password: 'supersecret',
       };
 
-      await expect(() => postValidate(bodyRequest)).not.toThrow(
+      await expect(postValidate(bodyRequest)).resolves.not.toThrow(
+        ValidationError
+      );
+    });
+  });
+  describe('Put validate schema', () => {
+    it('should throw validationerror when payload is empty', async () => {
+      const bodyRequest = {
+        refreshToken: '',
+      };
+      await expect(putValidate(bodyRequest)).rejects.toThrow(ValidationError);
+    });
+    it('should not throw error when data meet the specifications', async () => {
+      const refreshToken = await TokenManager.generateRefreshToken({ id: 1 });
+
+      await expect(putValidate({ refreshToken })).resolves.not.toThrow(
         ValidationError
       );
     });

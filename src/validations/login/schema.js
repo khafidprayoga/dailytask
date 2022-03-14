@@ -5,4 +5,9 @@ const postSchema = Joi.object({
   password: Joi.string().alphanum().min(8).max(64).required(),
 });
 
-module.exports = { postSchema };
+const putSchema = Joi.object({
+  // TODO: need regex for schema with valid three dots (header.payload.siganture)
+  refreshToken: Joi.string().required(),
+});
+
+module.exports = { postSchema, putSchema };
