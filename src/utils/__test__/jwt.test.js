@@ -2,7 +2,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const TokenManager = require('../jwt');
 const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } = process.env;
-const InternalServerError = require('@exceptions/InternalServerError');
+const InvariantError = require('@exceptions/InvariantError');
 
 describe('TokenManager test for JWT sessions management', () => {
   it('should have main function', () => {
@@ -50,7 +50,7 @@ describe('TokenManager test for JWT sessions management', () => {
 
       await expect(
         TokenManager.verifyRefreshToken(refreshToken)
-      ).resolves.not.toThrow(InternalServerError);
+      ).resolves.not.toThrow(InvariantError);
     });
     it('should  throw internal server error when given refresh token signature invalid', async () => {
       // generated from jwt.io, private key not same as REFRESH_TOKEN_KEY
@@ -58,7 +58,7 @@ describe('TokenManager test for JWT sessions management', () => {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
 
       await expect(TokenManager.verifyRefreshToken(token)).rejects.toThrow(
-        InternalServerError
+        InvariantError
       );
     });
   });

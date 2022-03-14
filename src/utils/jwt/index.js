@@ -1,6 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const InternalServerError = require('../../exceptions/InternalServerError');
+const InvariantError = require('../../exceptions/InvariantError');
 
 const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } = process.env;
 const _optionsForAccessToken = {
@@ -38,9 +38,7 @@ const TokenManager = {
 
       return decoded.payload;
     } catch (error) {
-      throw new InternalServerError(
-        `Server can't verify JWT token, signature invalid`
-      );
+      throw new InvariantError('JWT token invalid');
     }
   },
 };
