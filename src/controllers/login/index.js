@@ -30,6 +30,26 @@ const LoginControllers = {
       next(error);
     }
   },
+  async putHandler(req, res, next) {
+    try {
+      await LoginValidations.putValidate(req.body);
+      const { refreshToken } = req.body;
+      await authServices.verifyRefreshToken(refreshToken);
+      const { id } = await TokenManager.verifyRefreshToken(refreshToken);
+      const accessToken = await TokenManager.generateAccessToken({ id });
+
+      const response = {
+        status: 'success',
+        message: 'New session token created',
+        data: {
+          accessToken,
+        },
+      };
+      res.status(201).send(response);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = LoginControllers;
