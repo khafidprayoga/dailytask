@@ -7,6 +7,17 @@ silahkan retrieve data task dan mulai bekerja! agar lebih produktif.
 
 Catatan: ini adalah aplikasi untuk pembelajaran yang bertujuan untuk mengimplementasikan proposal dari "_/specs/dailytask.yaml_".
 
+## Machine Information
+
+Development Server
+
+```
+Linux kernel: 5.15.21-1-MANJARO
+Node version: v16.13.1
+Postgres: 13.4
+Yarn: 1.22.17
+```
+
 ## Structure
 
 file yang berada di root "/" merupakan file config untuk pembuatan aplikasi, yang perlu dikerjakan berada di file "**src/**".
@@ -28,4 +39,4 @@ app.js: berisi entrypoint dan domains yang akan didaftarkan ke Express.js
 
 ## Copyright
 
-Dibawah lisensi MIT copyright (C) 2022
+Dibawah lisensi MIT copyright (c) 2022
