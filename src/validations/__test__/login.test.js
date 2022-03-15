@@ -1,5 +1,5 @@
 const ValidationError = require('../../exceptions/ValidationError');
-const { postValidate, putValidate } = require('../login/');
+const { postValidate, putValidate, deleteValidate } = require('../login/');
 const TokenManager = require('@utils/jwt/');
 
 describe('/login bodyRequest validations', () => {
@@ -34,6 +34,23 @@ describe('/login bodyRequest validations', () => {
       const refreshToken = await TokenManager.generateRefreshToken({ id: 1 });
 
       await expect(putValidate({ refreshToken })).resolves.not.toThrow(
+        ValidationError
+      );
+    });
+  });
+  describe('Delete validations schema', () => {
+    it('should throw validationerror when payload is empty', async () => {
+      const bodyRequest = {
+        refreshToken: '',
+      };
+      await expect(deleteValidate(bodyRequest)).rejects.toThrow(
+        ValidationError
+      );
+    });
+    it('should not throw error when data meet the specifications', async () => {
+      const refreshToken = await TokenManager.generateRefreshToken({ id: 1 });
+
+      await expect(deleteValidate({ refreshToken })).resolves.not.toThrow(
         ValidationError
       );
     });

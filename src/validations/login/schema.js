@@ -10,4 +10,9 @@ const putSchema = Joi.object({
   refreshToken: Joi.string().required(),
 });
 
-module.exports = { postSchema, putSchema };
+const deleteSchema = Joi.object({
+  // TODO: need regex for schema with valid three dots (header.payload.siganture)
+  refreshToken: Joi.string().required(),
+});
+
+module.exports = { postSchema, putSchema, deleteSchema };
