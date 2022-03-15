@@ -2,6 +2,8 @@ const usersServices = require('../users/');
 const pool = require('@connections');
 const { testUser } = require('@helpers/User.js');
 const InvariantError = require('@exceptions/InvariantError');
+const AuthenticationError = require('@exceptions/AuthenticationError');
+const { passwordManager } = require('@utils/bcrypt');
 
 describe('usersService database', () => {
   const services = new usersServices();
@@ -25,6 +27,7 @@ describe('usersService database', () => {
   it('should have common function method', () => {
     expect(services.addUser).toBeInstanceOf(Function);
     expect(services._verifyUsername).toBeInstanceOf(Function);
+    expect(services.verifyCredentials).toBeInstanceOf(Function);
   });
 
   describe('_verifyUsername method', () => {
@@ -49,6 +52,53 @@ describe('usersService database', () => {
       const userId = await services.addUser(bodyRequest);
 
       expect(userId).toBeDefined();
+    });
+  });
+
+  describe('verifyCredentials method', () => {
+    it('should throw Authentication when username wrong', async () => {
+      // expect actual username that does not exist on DB
+      await expect(
+        services.verifyCredentials('johndoeeeeeeee', 'error')
+      ).rejects.toThrow(AuthenticationError);
+    });
+    it('should throw Authentication when password wrong', async () => {
+      const userData = {
+        username: 'khafidprayoga12',
+        password: 'supersecret',
+      };
+      const hashedPassword = await passwordManager.encode(userData.password);
+      testUser.createNewUser({
+        username: userData.username,
+        password: hashedPassword,
+      });
+
+      await expect(
+        services.verifyCredentials(userData.username, 'secretopassword')
+      ).rejects.toThrow(AuthenticationError);
+
+      await testUser.deleteUser({ username: userData.username });
+    });
+    it('should return user id if user credentials match', async () => {
+      const userData = {
+        username: 'khafidganteng123',
+        password: 'sadboy',
+      };
+      const hashedPassword = await passwordManager.encode(userData.password);
+
+      const tableHelpers = await testUser.createNewUser({
+        username: userData.username,
+        password: hashedPassword,
+      });
+
+      const credentials = await services.verifyCredentials(
+        userData.username,
+        userData.password
+      );
+
+      expect(credentials).toEqual(tableHelpers.id);
+      // clean table
+      testUser.deleteUser({ username: userData.username });
     });
   });
 });

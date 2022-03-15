@@ -1,4 +1,5 @@
 const InvariantError = require('../../../exceptions/InvariantError');
+const AuthenticationError = require('../../../exceptions/AuthenticationError');
 const { passwordManager } = require('../../../utils/bcrypt');
 const pool = require('../connection');
 
@@ -28,6 +29,23 @@ class usersService {
 
     const result = await this._pool.query(sqlSyantax);
     return result.rows[0].id;
+  }
+  async verifyCredentials(username, password) {
+    const sqlQuery = {
+      text: 'SELECT id, password FROM users WHERE username = $1',
+      values: [username],
+    };
+    const result = await this._pool.query(sqlQuery);
+    if (!result.rowCount) {
+      throw new AuthenticationError('invalid username or password');
+    }
+    const { id, password: hashedPassword } = result.rows[0];
+    const match = await passwordManager.compare(password, hashedPassword);
+
+    if (!match) {
+      throw new AuthenticationError('invalid username or password');
+    }
+    return id;
   }
 }
 
