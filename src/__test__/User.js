@@ -2,7 +2,7 @@
 
 const pool = require('../services/database/connection');
 
-module.exports.testUser = {
+const TestUser = {
   async createNewUser({
     firstName = 'John',
     lastName = 'Doe',
@@ -21,6 +21,7 @@ module.exports.testUser = {
       return result.rows[0];
     }
   },
+
   async deleteUser({ username }) {
     const sqlSyntax = {
       text: 'DELETE FROM users WHERE username = $1',
@@ -29,3 +30,5 @@ module.exports.testUser = {
     await pool.query(sqlSyntax);
   },
 };
+
+module.exports = TestUser;

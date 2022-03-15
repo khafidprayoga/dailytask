@@ -1,4 +1,6 @@
+/* eslint no-console: off */
 require('dotenv').config();
+
 const app = require('../app');
 const { HTTP_HOST, HTTP_PORT } = process.env;
 

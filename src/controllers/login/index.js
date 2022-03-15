@@ -1,21 +1,19 @@
 const LoginValidations = require('../../validations/login');
 const TokenManager = require('../../utils/jwt');
-const usersService = require('../../services/database/users');
+const UsersServices = require('../../services/database/users');
 const AuthenticationsServices = require('../../services/database/authentications');
-const services = new usersService();
-const authServices = new AuthenticationsServices();
 
 const LoginControllers = {
   async postHandler(req, res, next) {
     try {
       await LoginValidations.postValidate(req.body);
       const { username, password } = req.body;
-      const id = await services.verifyCredentials(username, password);
+      const id = await UsersServices.verifyCredentials(username, password);
 
       const accessToken = await TokenManager.generateAccessToken({ id });
       const refreshToken = await TokenManager.generateRefreshToken({ id });
 
-      await authServices.addRefreshToken(refreshToken);
+      await AuthenticationsServices.addRefreshToken(refreshToken);
 
       const response = {
         status: 'success',
@@ -30,11 +28,12 @@ const LoginControllers = {
       next(error);
     }
   },
+
   async putHandler(req, res, next) {
     try {
       await LoginValidations.putValidate(req.body);
       const { refreshToken } = req.body;
-      await authServices.verifyRefreshToken(refreshToken);
+      await AuthenticationsServices.verifyRefreshToken(refreshToken);
       const { id } = await TokenManager.verifyRefreshToken(refreshToken);
       const accessToken = await TokenManager.generateAccessToken({ id });
 
@@ -50,12 +49,13 @@ const LoginControllers = {
       next(error);
     }
   },
+
   async deleteHandler(req, res, next) {
     try {
       await LoginValidations.deleteValidate(req.body);
       const { refreshToken } = req.body;
-      await authServices.verifyRefreshToken(refreshToken);
-      await authServices.deleteRefreshToken(refreshToken);
+      await AuthenticationsServices.verifyRefreshToken(refreshToken);
+      await AuthenticationsServices.deleteRefreshToken(refreshToken);
 
       const response = {
         status: 'success',

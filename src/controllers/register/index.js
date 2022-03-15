@@ -1,13 +1,11 @@
 const RegisterValidations = require('../../validations/register');
-const usersService = require('../../services/database/users');
+const UsersServices = require('../../services/database/users');
 
-const services = new usersService();
-
-module.exports.registerControllers = {
+const RegisterControllers = {
   async postHandler(req, res, next) {
     try {
       await RegisterValidations.postValidate(req.body);
-      const userId = await services.addUser(req.body);
+      const userId = await UsersServices.addUser(req.body);
       const response = {
         status: 'success',
         message: 'Creating users, your account will be enable immediately!',
@@ -21,3 +19,5 @@ module.exports.registerControllers = {
     }
   },
 };
+
+module.exports = RegisterControllers;

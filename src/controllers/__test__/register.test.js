@@ -1,6 +1,6 @@
 const app = require('@app');
 const request = require('supertest');
-const { testUser } = require('@helpers/User.js');
+const TestUser = require('@helpers/User.js');
 const connections = require('@connections');
 
 describe('Register endpoint each http verb controllers test', () => {
@@ -10,7 +10,7 @@ describe('Register endpoint each http verb controllers test', () => {
 
   describe('POST handler', () => {
     afterEach(async () => {
-      await testUser.deleteUser({ username: 'nikolatesla' });
+      await TestUser.deleteUser({ username: 'nikolatesla' });
     });
 
     it('should return userId, if user data succees inserted', async () => {

@@ -2,7 +2,7 @@
 
 const pool = require('../services/database/connection');
 
-module.exports.TestAuthentications = {
+const TestAuthentications = {
   async insertToken(token) {
     const sqlQuery = {
       text: 'INSERT INTO authentications VALUES ($1)',
@@ -11,6 +11,7 @@ module.exports.TestAuthentications = {
     const result = await pool.query(sqlQuery);
     if (result.rowCount) return true;
   },
+
   async verifyToken(token) {
     const sqlQuery = {
       text: 'SELECT token FROM authentications WHERE token = $1',
@@ -22,6 +23,7 @@ module.exports.TestAuthentications = {
     }
     return false;
   },
+
   async deleteToken(token) {
     const sqlQuery = {
       text: 'DELETE FROM authentications WHERE token = $1',
@@ -31,3 +33,4 @@ module.exports.TestAuthentications = {
     if (result) return true;
   },
 };
+module.exports = TestAuthentications;

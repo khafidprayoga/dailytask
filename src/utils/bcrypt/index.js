@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
-require('dotenv').config();
 
-module.exports.passwordManager = {
+const PasswordManager = {
   async encode(plainPassword) {
     const hashedPassword = await bcrypt.hash(plainPassword, 12);
     return hashedPassword;
@@ -12,3 +11,5 @@ module.exports.passwordManager = {
     return false;
   },
 };
+
+module.exports = PasswordManager;

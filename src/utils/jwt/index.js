@@ -3,12 +3,12 @@ const jwt = require('jsonwebtoken');
 const InvariantError = require('../../exceptions/InvariantError');
 
 const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } = process.env;
-const _optionsForAccessToken = {
+const OPTIONS_FOR_ACCESS_TOKEN = {
   algorithm: 'HS256',
   expiresIn: '1 days',
 };
 
-const _optionsForRefreshToken = {
+const OPTIONS_FOR_REFRESH_TOKEN = {
   algorithm: 'HS512',
   expiresIn: '7 days',
 };
@@ -18,7 +18,7 @@ const TokenManager = {
     const accessToken = jwt.sign(
       payload,
       ACCESS_TOKEN_KEY,
-      _optionsForAccessToken
+      OPTIONS_FOR_ACCESS_TOKEN
     );
     return accessToken;
   },
@@ -26,7 +26,7 @@ const TokenManager = {
     const refreshToken = jwt.sign(
       payload,
       REFRESH_TOKEN_KEY,
-      _optionsForRefreshToken
+      OPTIONS_FOR_REFRESH_TOKEN
     );
     return refreshToken;
   },
