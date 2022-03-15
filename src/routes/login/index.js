@@ -5,6 +5,6 @@ loginEndpoint
   .route('/')
   .post(LoginControllers.postHandler)
   .put(LoginControllers.putHandler)
-  .delete();
+  .delete(LoginControllers.deleteHandler);
 
 module.exports = loginEndpoint;

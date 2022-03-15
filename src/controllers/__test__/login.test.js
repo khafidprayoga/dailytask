@@ -99,4 +99,54 @@ describe('Login endpoint each http verb test', () => {
       expect(message).toEqual('Refresh Token invalid!');
     });
   });
+  describe('DELETE handler', () => {
+    const userData = {
+      firstName: 'Jane',
+      lastName: 'Doe',
+      username: 'janedoe',
+      password: 'supersecret',
+      birthDate: '2000-01-20',
+    };
+
+    afterEach(async () => {
+      await testUser.deleteUser({ username: userData.username });
+    });
+
+    it('should delete session token if refreshToken valid and exist', async () => {
+      await users.addUser(userData);
+      const postResponse = await request(app)
+        .post('/login')
+        .send({ username: userData.username, password: userData.password });
+
+      const { refreshToken } = postResponse.body.data;
+      const deleteResponse = await request(app)
+        .delete('/login')
+        .send({ refreshToken });
+
+      const { status, message } = deleteResponse.body;
+
+      expect(deleteResponse.statusCode).toEqual(200);
+      expect(status).toEqual('success');
+      expect(message).toEqual('Session token destroyed');
+    });
+
+    it('should throw invarianterror (400) if refreshToken not exist on DB', async () => {
+      await users.addUser(userData);
+      const postResponse = await request(app)
+        .post('/login')
+        .send({ username: userData.username, password: userData.password });
+
+      const { refreshToken } = postResponse.body.data;
+      await TestAuthentications.deleteToken(refreshToken);
+
+      const deleteResponse = await request(app)
+        .delete('/login')
+        .send({ refreshToken });
+      const { status, message } = deleteResponse.body;
+
+      expect(deleteResponse.statusCode).toEqual(400);
+      expect(status).toEqual('failed');
+      expect(message).toEqual('Refresh Token invalid!');
+    });
+  });
 });

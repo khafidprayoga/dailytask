@@ -50,6 +50,22 @@ const LoginControllers = {
       next(error);
     }
   },
+  async deleteHandler(req, res, next) {
+    try {
+      await LoginValidations.deleteValidate(req.body);
+      const { refreshToken } = req.body;
+      await authServices.verifyRefreshToken(refreshToken);
+      await authServices.deleteRefreshToken(refreshToken);
+
+      const response = {
+        status: 'success',
+        message: 'Session token destroyed',
+      };
+      res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = LoginControllers;
