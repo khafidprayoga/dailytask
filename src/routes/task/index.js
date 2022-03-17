@@ -4,6 +4,15 @@ const TaskControllers = require('../../controllers/task');
 
 taskEndpoint
   .route('/')
-  .get([protectedResourceMiddleware, TaskControllers.getHandler]);
+  .post([protectedResourceMiddleware, TaskControllers.postTaskHandler])
+  .get([protectedResourceMiddleware, TaskControllers.getAllTaskHandler]);
+
+taskEndpoint
+  .route('/:taskId')
+  .get([protectedResourceMiddleware, TaskControllers.getSpecifiedTaskHandler])
+  .delete([
+    protectedResourceMiddleware,
+    TaskControllers.deleteSpecifiedTaskHandler,
+  ]);
 
 module.exports = taskEndpoint;
