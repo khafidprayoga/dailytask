@@ -3,12 +3,14 @@ const jwt = require('jsonwebtoken');
 const TokenManager = require('../jwt');
 const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } = process.env;
 const InvariantError = require('@exceptions/InvariantError');
+const AuthenticationError = require('@exceptions/AuthenticationError');
 
 describe('TokenManager test for JWT sessions management', () => {
   it('should have main function', () => {
     expect(TokenManager.generateAccessToken).toBeInstanceOf(Function);
     expect(TokenManager.generateRefreshToken).toBeInstanceOf(Function);
     expect(TokenManager.verifyRefreshToken).toBeInstanceOf(Function);
+    expect(TokenManager.verifyAccessToken).toBeInstanceOf(Function);
   });
 
   describe('generateAccessToken function', () => {
@@ -26,6 +28,7 @@ describe('TokenManager test for JWT sessions management', () => {
       expect(accessToken.split('.')[2]).toEqual(decoded.signature);
     });
   });
+
   describe('generateRefreshToken function', () => {
     it('should generate refresh token correctly with secret env REFRESH_TOKEN_KEY', async () => {
       const payload = {
@@ -41,6 +44,7 @@ describe('TokenManager test for JWT sessions management', () => {
       expect(refreshToken.split('.')[2]).toEqual(decoded.signature);
     });
   });
+
   describe('verifyRefreshToken function', () => {
     it('should sign and verify refreshToken with valid signature', async () => {
       const payload = {
@@ -60,6 +64,40 @@ describe('TokenManager test for JWT sessions management', () => {
       await expect(TokenManager.verifyRefreshToken(token)).rejects.toThrow(
         InvariantError
       );
+    });
+  });
+
+  describe('verifyAccessToken function', () => {
+    it('should sign and verify accessToken with valid signature', async () => {
+      const payload = {
+        id: 200,
+      };
+      const accessToken = await TokenManager.generateAccessToken(payload);
+
+      await expect(
+        TokenManager.verifyAccessToken(accessToken)
+      ).resolves.not.toThrow(AuthenticationError);
+    });
+    it('should  throw AuthenticationError when token expired ', async () => {
+      //Token exp after 15s on `development` env
+      const accessToken = await TokenManager.generateAccessToken({ id: 123 });
+      jest.useFakeTimers();
+      jest.spyOn(global, 'setTimeout'); // mock setTimeout
+
+      setTimeout(async () => {
+        console.log(await TokenManager.verifyAccessToken(accessToken));
+      }, 3_600_000 /* in ms */); // equals to 1 hours
+      jest.useRealTimers();
+    });
+    it('should  not throw AuthenticationError when token not expired ', async () => {
+      //Token exp after 15s on `development` env
+      const accessToken = await TokenManager.generateAccessToken({ id: 123 });
+      jest.useFakeTimers();
+      jest.spyOn(global, 'setTimeout'); // mock setTimeout
+      setTimeout(async () => {
+        console.log(await TokenManager.verifyAccessToken(accessToken));
+      }, 1000);
+      jest.useRealTimers();
     });
   });
 });

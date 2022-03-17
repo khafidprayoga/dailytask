@@ -5,9 +5,10 @@
   "author": "Khafid Prayoga <khafidp@pm.me>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon ./src/bin/http.js",
-    "debug": "DEBUG=express:* nodemon ./src/bin/http.js",
+    "dev": "NODE_ENV=development nodemon ./src/bin/http.js",
+    "debug": "DEBUG=express:* NODE_ENV=development nodemon ./src/bin/http.js",
     "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "prod": "NODE_ENV=production node ./src/bin/http.js",
     "migrate": "node-pg-migrate -m src/migrations/ --verbose",
     "test": "jest --setupFiles dotenv/config -i",
