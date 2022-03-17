@@ -22,9 +22,8 @@ exports.up = (pgm) => {
       notNull: true,
     },
     createdAt: {
-      type: 'DATE',
+      type: 'TIMESTAMP',
       notNull: true,
-      default: pgm.func('current_date'),
     },
   });
 

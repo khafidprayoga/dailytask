@@ -1,5 +1,10 @@
 require('dotenv').config();
-const { Pool } = require('pg');
+const { Pool, types } = require('pg');
+
+// set datetime type parser to work with moment
+types.setTypeParser(1114, function (value) {
+  return value;
+});
 
 const { PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE } = process.env;
 

@@ -1,16 +1,21 @@
 const pool = require('../connection');
 const moment = require('moment');
 const NotFoundError = require('../../../exceptions/NotFoundError');
-const TODAY = moment().format('YYYY-MM-DD');
 
 const TasksServices = {
   async createNewTask({ title, description, userId }) {
     const sqlQuery = {
-      text: 'INSERT INTO tasks (title,description, author) VALUES ($1, $2, $3) RETURNING id',
-      values: [title, description, userId],
+      text: 'INSERT INTO tasks (title,description, author, "createdAt") VALUES ($1, $2, $3, $4) RETURNING id, "createdAt"',
+      values: [
+        title,
+        description,
+        userId,
+        moment().format('YYYY-MM-DD hh:mm:ss'),
+      ],
     };
+
     const result = await pool.query(sqlQuery);
-    return result.rows[0].id;
+    return result.rows[0];
   },
   async verifyTaskAvailability(taskId) {
     const sqlQuery = {
@@ -40,6 +45,8 @@ const TasksServices = {
     return result.rows[0];
   },
   async getAllTasks(userId) {
+    const TODAY = moment().format('YYYY-MM-DD');
+
     const sqlQuery = {
       text: `
             SELECT

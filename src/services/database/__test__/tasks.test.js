@@ -3,7 +3,7 @@ const pool = require('@connections');
 const NotFoundError = require('@exceptions/NotFoundError');
 const TestTasks = require('@helpers/Tasks.js');
 const TestUser = require('@helpers/User.js');
-const { before } = require('lodash');
+const moment = require('moment');
 
 describe('Tasks services', () => {
   it('should have common function', () => {
@@ -21,6 +21,27 @@ describe('Tasks services', () => {
   });
 
   describe('createNewTasks method', () => {
+    it('should create task with date today', async () => {
+      const TODAY = moment().format('YYYY-MM-DD hh:mm:ss');
+
+      const { id: userId } = await TestUser.createNewUser({
+        username: 'gettask',
+      });
+
+      const taskMetadata = {
+        title: 'Nonton Anime',
+        description: 'Attack On Titan S4 The FInale',
+        userId,
+      };
+
+      const { id: taskId, createdAt } = await TasksServices.createNewTask(
+        taskMetadata
+      );
+
+      expect(taskId).toBeDefined();
+      expect(createdAt).toEqual(TODAY);
+      await TestTasks.deleteTask(taskId); // return true if tasks deleted successfully
+    });
     it('should insert task correctly', async () => {
       const { id: userId } = await TestUser.createNewUser({
         username: 'gettask',
@@ -32,7 +53,7 @@ describe('Tasks services', () => {
         userId,
       };
 
-      const taskId = await TasksServices.createNewTask(taskMetadata);
+      const { id: taskId } = await TasksServices.createNewTask(taskMetadata);
 
       const isDeleted = await TestTasks.deleteTask(taskId); // return true if tasks deleted successfully
       expect(isDeleted).toBe(true);
