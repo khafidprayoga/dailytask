@@ -1,0 +1,69 @@
+const pool = require('../connection');
+const moment = require('moment');
+const NotFoundError = require('../../../exceptions/NotFoundError');
+const TODAY = moment().format('YYYY-MM-DD');
+
+const TasksServices = {
+  async createNewTask({ title, description, userId }) {
+    const sqlQuery = {
+      text: 'INSERT INTO tasks (title,description, author) VALUES ($1, $2, $3) RETURNING id',
+      values: [title, description, userId],
+    };
+    const result = await pool.query(sqlQuery);
+    return result.rows[0].id;
+  },
+  async verifyTaskAvailability(taskId) {
+    const sqlQuery = {
+      text: 'SELECT FROM tasks WHERE id = $1',
+      values: [taskId],
+    };
+    const result = await pool.query(sqlQuery);
+    if (!result.rowCount) {
+      throw new NotFoundError('Task not found!');
+    }
+  },
+  async getDetailTaskById(taskId) {
+    const sqlQuery = {
+      text: `
+            SELECT
+                tasks.title,
+                tasks.description,
+                users.username author,
+                tasks."createdAt"
+            FROM tasks
+                LEFT JOIN users
+                ON tasks.author = users.id
+            WHERE tasks.id = $1`,
+      values: [taskId],
+    };
+    const result = await pool.query(sqlQuery);
+    return result.rows[0];
+  },
+  async getAllTasks(userId) {
+    const sqlQuery = {
+      text: `
+            SELECT
+                tasks.id,
+                tasks.title,
+                users.username author,
+                tasks."createdAt"
+            FROM tasks
+                LEFT JOIN users
+                ON tasks.author = users.id
+            WHERE tasks."createdAt" = $1 AND tasks.author = $2`,
+      values: [TODAY, userId],
+    };
+    const result = await pool.query(sqlQuery);
+    return result.rows;
+  },
+  async deleteTaskById(taskId) {
+    const sqlQuery = {
+      text: 'DELETE FROM tasks WHERE id = $1',
+      values: [taskId],
+    };
+
+    await pool.query(sqlQuery);
+  },
+};
+
+module.exports = TasksServices;
