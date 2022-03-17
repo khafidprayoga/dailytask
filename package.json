@@ -41,6 +41,7 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "node-pg-migrate": "^6.2.1",
     "pg": "^8.7.3"
   },
