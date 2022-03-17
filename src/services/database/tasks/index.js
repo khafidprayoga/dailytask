@@ -10,7 +10,7 @@ const TasksServices = {
         title,
         description,
         userId,
-        moment().format('YYYY-MM-DD hh:mm:ss'),
+        moment().format('YYYY-MM-DD HH:mm:ss'),
       ],
     };
 
@@ -57,8 +57,8 @@ const TasksServices = {
             FROM tasks
                 LEFT JOIN users
                 ON tasks.author = users.id
-            WHERE tasks."createdAt" = $1 AND tasks.author = $2`,
-      values: [TODAY, userId],
+            WHERE tasks.author = $1 AND DATE(tasks."createdAt") = $2`,
+      values: [userId, TODAY],
     };
     const result = await pool.query(sqlQuery);
     return result.rows;

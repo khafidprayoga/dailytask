@@ -22,7 +22,7 @@ describe('Tasks services', () => {
 
   describe('createNewTasks method', () => {
     it('should create task with date today', async () => {
-      const TODAY = moment().format('YYYY-MM-DD hh:mm:ss');
+      const TODAY = moment().format('YYYY-MM-DD HH:mm:ss');
 
       const { id: userId } = await TestUser.createNewUser({
         username: 'gettask',
