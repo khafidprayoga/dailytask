@@ -7,7 +7,7 @@ const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, NODE_ENV } = process.env;
 
 const OPTIONS_FOR_ACCESS_TOKEN = {
   algorithm: 'HS256',
-  expiresIn: '1 hours',
+  expiresIn: NODE_ENV === 'production' ? '1 hours' : 15, // 15s
 };
 
 const OPTIONS_FOR_REFRESH_TOKEN = {
