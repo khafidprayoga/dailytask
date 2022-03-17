@@ -14,7 +14,7 @@ describe('Login endpoint each http verb test', () => {
     const userData = {
       firstName: 'Jane',
       lastName: 'Doe',
-      username: 'janedoe',
+      username: 'janedoe123',
       password: 'supersecret',
       birthDate: '2000-01-20',
     };
