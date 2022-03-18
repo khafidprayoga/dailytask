@@ -7,6 +7,11 @@ const protectedResourceMiddleware = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
     const [scheme, accessToken] = _.split(authorization, ' ');
+    
+    /* istanbul ignore if */
+    if (!scheme) {
+      throw new AuthenticationError('Please login first!');
+    }
 
     if (_.toLower(scheme) !== 'bearer') {
       throw new InternalServerError('Server only support Bearer Auth Scheme');
