@@ -67,9 +67,9 @@ const TaskControllers = {
       const { taskId } = req.params;
       const userId = req.userId;
 
+      await TaskValidations.deleteValidate({ taskId });
       await TasksServices.verifyTaskAvailability(taskId);
       await TasksServices.verifyTaskOwner(taskId, userId);
-      await TaskValidations.deleteValidate({ taskId });
 
       await TasksServices.deleteTaskById(taskId);
 
