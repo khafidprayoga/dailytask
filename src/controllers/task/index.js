@@ -18,7 +18,7 @@ const TaskControllers = {
       const response = { status: 'success', message: 'New task added', data };
       await res.status(201).send(response);
     } catch (error) {
-      /* istanbul ignore next*/
+      /* istanbul ignore next */
       next(error);
     }
   },
@@ -39,7 +39,7 @@ const TaskControllers = {
       };
       res.status(200).send(response);
     } catch (error) {
-      /* istanbul ignore next*/
+      /* istanbul ignore next */
       next(error);
     }
   },
@@ -57,7 +57,7 @@ const TaskControllers = {
       };
       res.status(200).send(response);
     } catch (error) {
-      /* istanbul ignore next*/
+      /* istanbul ignore next */
       next(error);
     }
   },
@@ -65,7 +65,7 @@ const TaskControllers = {
   async deleteSpecifiedTaskHandler(req, res, next) {
     try {
       const { taskId } = req.params;
-      const userId = req.userId;
+      const { userId } = req;
 
       await TaskValidations.deleteValidate({ taskId });
       await TasksServices.verifyTaskAvailability(taskId);
@@ -80,7 +80,7 @@ const TaskControllers = {
 
       res.status(200).send(response);
     } catch (error) {
-      /* istanbul ignore next*/
+      /* istanbul ignore next */
       next(error);
     }
   },

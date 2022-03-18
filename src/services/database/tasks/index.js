@@ -1,5 +1,5 @@
-const pool = require('../connection');
 const moment = require('moment');
+const pool = require('../connection');
 const NotFoundError = require('../../../exceptions/NotFoundError');
 const AuthorizationError = require('../../../exceptions/AuthorizationError');
 
