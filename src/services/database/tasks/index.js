@@ -62,6 +62,9 @@ const TasksServices = {
       values: [userId, TODAY],
     };
     const result = await pool.query(sqlQuery);
+    if (!result.rowCount) {
+      throw new NotFoundError('No new task for today!');
+    }
     return result.rows;
   },
   async deleteTaskById(taskId) {
