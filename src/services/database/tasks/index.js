@@ -1,6 +1,7 @@
 const pool = require('../connection');
 const moment = require('moment');
 const NotFoundError = require('../../../exceptions/NotFoundError');
+const AuthorizationError = require('../../../exceptions/AuthorizationError');
 
 const TasksServices = {
   async createNewTask({ title, description, userId }) {
@@ -70,6 +71,17 @@ const TasksServices = {
     };
 
     await pool.query(sqlQuery);
+  },
+  async verifyTaskOwner(taskId, userId) {
+    const sqlQuery = {
+      text: 'SELECT * FROM tasks WHERE id = $1 AND author = $2',
+      values: [taskId, userId],
+    };
+
+    const result = await pool.query(sqlQuery);
+    if (!result.rowCount) {
+      throw new AuthorizationError('Not allowed to access this resource');
+    }
   },
 };
 

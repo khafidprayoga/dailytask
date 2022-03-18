@@ -18,15 +18,19 @@ const TaskControllers = {
       const response = { status: 'success', message: 'New task added', data };
       await res.status(201).send(response);
     } catch (error) {
+      /* istanbul ignore next*/
       next(error);
     }
   },
 
   async getSpecifiedTaskHandler(req, res, next) {
     try {
+      const { userId } = req;
       const { taskId } = req.params;
-      await TasksServices.verifyTaskAvailability(taskId);
+
       await TaskValidations.getValidate({ taskId });
+      await TasksServices.verifyTaskAvailability(taskId);
+      await TasksServices.verifyTaskOwner(taskId, userId);
 
       const data = await TasksServices.getDetailTaskById(taskId);
       const response = {
@@ -35,6 +39,7 @@ const TaskControllers = {
       };
       res.status(200).send(response);
     } catch (error) {
+      /* istanbul ignore next*/
       next(error);
     }
   },
@@ -52,6 +57,7 @@ const TaskControllers = {
       };
       res.status(200).send(response);
     } catch (error) {
+      /* istanbul ignore next*/
       next(error);
     }
   },
@@ -59,18 +65,22 @@ const TaskControllers = {
   async deleteSpecifiedTaskHandler(req, res, next) {
     try {
       const { taskId } = req.params;
+      const userId = req.userId;
+
       await TasksServices.verifyTaskAvailability(taskId);
+      await TasksServices.verifyTaskOwner(taskId, userId);
       await TaskValidations.deleteValidate({ taskId });
 
       await TasksServices.deleteTaskById(taskId);
 
       const response = {
-        status: 'sucess',
+        status: 'success',
         message: `task with id '${taskId}' deleted`,
       };
 
       res.status(200).send(response);
     } catch (error) {
+      /* istanbul ignore next*/
       next(error);
     }
   },
