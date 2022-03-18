@@ -8,6 +8,7 @@ describe('exceptions middleware ', () => {
     const { status } = response.body;
 
     expect(response.statusCode).toEqual(400);
+    expect(status).toEqual('failed');
     expect(response.clientError).toBe(true);
   });
 });

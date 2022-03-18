@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint no-unused-vars: off */
 
 const exceptionsMiddleware = (err, req, res, next) => {
