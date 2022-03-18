@@ -5,6 +5,7 @@ const AuthenticationError = require('../../exceptions/AuthenticationError');
 
 const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, NODE_ENV } = process.env;
 
+/* istanbul ignore next */
 const OPTIONS_FOR_ACCESS_TOKEN = {
   algorithm: 'HS256',
   expiresIn: NODE_ENV === 'production' ? '1 hours' : 15, // 15s
