@@ -1,5 +1,6 @@
 const app = require('@app');
 const request = require('supertest');
+
 describe('exceptions middleware ', () => {
   it('should throw clientError', async () => {
     const response = await request(app).post('/register').send({});

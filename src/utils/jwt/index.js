@@ -1,11 +1,14 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const InvariantError = require('../../exceptions/InvariantError');
+const AuthenticationError = require('../../exceptions/AuthenticationError');
 
-const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } = process.env;
+const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, NODE_ENV } = process.env;
+
+/* istanbul ignore next */
 const OPTIONS_FOR_ACCESS_TOKEN = {
   algorithm: 'HS256',
-  expiresIn: '1 days',
+  expiresIn: NODE_ENV === 'production' ? '1 hours' : 15, // 15s
 };
 
 const OPTIONS_FOR_REFRESH_TOKEN = {
@@ -21,6 +24,17 @@ const TokenManager = {
       OPTIONS_FOR_ACCESS_TOKEN
     );
     return accessToken;
+  },
+  async verifyAccessToken(accessToken) {
+    try {
+      const decoded = await jwt.verify(accessToken, ACCESS_TOKEN_KEY, {
+        complete: true,
+      });
+
+      return decoded.payload;
+    } catch (error) {
+      throw new AuthenticationError('JWT token invalid');
+    }
   },
   async generateRefreshToken(payload) {
     const refreshToken = jwt.sign(

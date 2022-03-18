@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: off */
+
 const express = require('express');
 const { json } = require('body-parser');
 const serverRouter = require('./routes');
@@ -11,8 +13,8 @@ app.use(serverRouter); // mount all registered routes
 // If ClientError and ServerError push the error to exceptions middleware
 app.use(exceptionsMiddleware);
 
-// if route not found, and exceptions not thrownm handle with 404 middleware
-app.use((res) => {
+// if route not found, and exceptions not thrown handle with 404 middleware
+app.use((req, res) => {
   res.status(404).send({ status: 'failed', message: 'Endpoint not found!' });
 });
 
