@@ -261,6 +261,15 @@ paths:
                   title: Belajar NodeJS
                   author: khafidprayoga
                   createdAt: 2022-03-07T08:20:45.380Z
+        401:
+          description: Token not exist in header request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseForRequest'
+              example:
+                status: failed
+                message: 'token invalid'
         404:
           description: Task not found, please add one or more!
           content:
@@ -335,7 +344,7 @@ paths:
                 message: 'taskId must valid GUID'
 
         401:
-          description: Not task author
+          description: Token not exist in header request
           content:
             application/json:
               schema:

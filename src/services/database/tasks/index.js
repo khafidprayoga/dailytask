@@ -62,6 +62,8 @@ const TasksServices = {
       values: [userId, TODAY],
     };
     const result = await pool.query(sqlQuery);
+
+    /* istanbul ignore if */
     if (!result.rowCount) {
       throw new NotFoundError('No new task for today!');
     }

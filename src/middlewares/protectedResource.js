@@ -2,12 +2,13 @@
 const _ = require('lodash');
 const TokenManager = require('../utils/jwt');
 const InternalServerError = require('../exceptions/InternalServerError');
+const AuthenticationError = require('../exceptions/AuthenticationError');
 
 const protectedResourceMiddleware = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
     const [scheme, accessToken] = _.split(authorization, ' ');
-    
+
     /* istanbul ignore if */
     if (!scheme) {
       throw new AuthenticationError('Please login first!');
