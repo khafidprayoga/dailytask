@@ -65,7 +65,7 @@ paths:
   /register:
     post:
       tags:
-        - "Register"
+        - 'Register'
       operationId: createNewUser
       summary: Create new user to use dailytask application
       description: |
@@ -92,7 +92,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/NewUser"
+              $ref: '#/components/schemas/NewUser'
             example:
               firstName: Khafid
               lastName: Prayoga
@@ -105,50 +105,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: success
                 message: your requests will be processed immediately
-        406:
+        400:
           description: User too young
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
-                message: You are too young, your age must be 15 or more
-        409:
-          description: Username already used
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseForRequest"
-              example:
-                status: failed
-                message: "Username {username} already used, please choose others"
-        411:
-          description: Guest must fill all required data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseForRequest"
-              example:
-                status: failed
-                message: Please fill the required field
-        413:
-          description: Field too larger
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseForRequest"
-              example:
-                status: failed
-                message: Your filled field not meet the strings length
+                message: '`errorField` thrown from Joi'
   /login:
     post:
       tags:
-        - "Session"
+        - 'Session'
       operationId: createNewSession
       summary: User login to make new token
       description: |
@@ -169,44 +142,35 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginSession"
+              $ref: '#/components/schemas/LoginSession'
             example:
-              username: "khafidprayoga"
-              password: "secret"
+              username: 'khafidprayoga'
+              password: 'secret'
       responses:
         201:
           description: Given username and password match, and user exist!
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
-                status: "success"
-                message: "Welcome! please use this token and keep it secret"
+                status: 'success'
+                message: 'Welcome! please use this token and keep it secret'
                 data:
-                  accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.E3E_9a5vSVf6puDT4OL-4lHAYVK3yTYYa_fDcuTpBN8"
-                  refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.E3E_9a5vSVf6puDT4OL-4lHAYVK3yTYYa_fDcuTpBN8'
+                  refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
         401:
           description: Given username and password doesnt match!
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
                 message: wrong username or password
-        404:
-          description: Given data doesnt exist!
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseForRequest"
-              example:
-                status: failed
-                message: account doesnt exist!
     put:
       tags:
-        - "Session"
+        - 'Session'
       operationId: updateNewSession
       summary: Update accessToken with given refreshToken
       description: |
@@ -215,45 +179,49 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RefreshSession"
+              $ref: '#/components/schemas/RefreshSession'
             example:
-              refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+              refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
       responses:
-        200:
+        201:
           description: Generate new accessToken because refreshToken is exist and alive
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: success
                 message: created new access token
                 data:
-                  accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
         400:
           description: refreshToken invalid or expired
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
-                message: "refresh token invalid or expired"
-  /logout:
+                message: 'refresh token invalid or expired'
     delete:
       tags:
-        - "Session"
+        - 'Session'
       operationId: deleteSession
-      security:
-        - AuthToken: []
       summary: Delete active session from refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshSession'
+            example:
+              refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
       responses:
         200:
           description: deleted active session from token
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: success
                 message: session deleted
@@ -262,16 +230,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
                 message: refreshToken invalid
-  /tasks:
+  /task:
     get:
       security:
         - AuthToken: []
       tags:
-        - "Task"
+        - 'Task'
       description: Return created daily tasks for today
       operationId: getAllTasks
       responses:
@@ -282,7 +250,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Task"
+                  $ref: '#/components/schemas/Task'
               example:
                 - id: 97e4a959-bd9c-4666-911a-f3d44ac3300a
                   title: Membaca Buku
@@ -298,7 +266,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
                 message: Task not found, please add one!
@@ -306,7 +274,7 @@ paths:
       security:
         - AuthToken: []
       tags:
-        - "Task"
+        - 'Task'
       description: Add new task
       operationId: createNewTask
       responses:
@@ -315,19 +283,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Task"
+                $ref: '#/components/schemas/Task'
               example:
                 id: 41cffdf9-64e2-430c-91f6-ae56d699b451
-                title: Read Book
-                description: Bicara Itu Ada Seninya
-                author: khafidprayoga
                 createdAt: 2022-03-07T08:20:45.380Z
         400:
           description: All field required
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
                 message: please fill all required field
@@ -336,7 +301,7 @@ paths:
       security:
         - AuthToken: []
       tags:
-        - "Task"
+        - 'Task'
       operationId: getDetailsTaskById
       description: Get details task by specified taskId
       parameters:
@@ -353,26 +318,55 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Task"
+                $ref: '#/components/schemas/Task'
               example:
                 title: Read Book
                 description: Bicara Itu Ada Seninya
                 author: khafidprayoga
                 createdAt: 2022-03-07T08:20:45.380Z
+        400:
+          description: task with given Id not GUID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseForRequest'
+              example:
+                status: failed
+                message: 'taskId must valid GUID'
+
+        401:
+          description: Not task author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseForRequest'
+              example:
+                status: failed
+                message: 'token invalid'
+        403:
+          description: Not task author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseForRequest'
+              example:
+                status: failed
+                message: 'resource not allowed'
         404:
           description: task with given Id not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
-                message: "taskId not found"
+                message: 'taskId not found'
+
     delete:
       security:
         - AuthToken: []
       tags:
-        - "Task"
+        - 'Task'
       operationId: deleteTaskById
       description: delete task by id
       parameters:
@@ -389,20 +383,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: success
                 message: Task deleted!
-
+        401:
+          description: Not task author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseForRequest'
+              example:
+                status: failed
+                message: 'token invalid'
+        403:
+          description: Not task author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseForRequest'
+              example:
+                status: failed
+                message: 'resource not allowed'
         404:
           description: task with given Id not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponseForRequest"
+                $ref: '#/components/schemas/ResponseForRequest'
               example:
                 status: failed
-                message: "task not found"
+                message: 'task not found'
 components:
   securitySchemes:
     AuthToken:
@@ -460,11 +471,11 @@ components:
           type: string
           format: date-time
       required:
-        - "firstName"
-        - "lastName"
-        - "username"
-        - "password"
-        - "birthDate"
+        - 'firstName'
+        - 'lastName'
+        - 'username'
+        - 'password'
+        - 'birthDate'
     ResponseForRequest:
       type: object
       properties:
@@ -475,8 +486,8 @@ components:
         data:
           type: object
       required:
-        - "status"
-        - "message"
+        - 'status'
+        - 'message'
     LoginSession:
       type: object
       properties:
@@ -486,8 +497,8 @@ components:
           type: string
           format: password
       required:
-        - "username"
-        - "password"
+        - 'username'
+        - 'password'
     RefreshSession:
       type: object
       properties:
@@ -498,38 +509,38 @@ components:
       items:
         type: string
         enum:
-          - "FieldRequired"
-          - "FieldToLarger"
-          - "UsernameExist"
-          - "AgeNotEnough"
+          - 'FieldRequired'
+          - 'FieldToLarger'
+          - 'UsernameExist'
+          - 'AgeNotEnough'
     PostSessionError:
       type: array
       items:
         type: string
         enum:
-          - "DataNotMatched"
-          - "AccountNotExist"
+          - 'DataNotMatched'
+          - 'AccountNotExist'
     PutSessionError:
       type: array
       items:
         type: string
         enum:
-          - "TokenInvalid"
+          - 'TokenInvalid'
     DeleteSessionError:
       type: array
       items:
         type: string
         enum:
-          - "TokenInvalid"
+          - 'TokenInvalid'
     GetTaskError:
       type: array
       items:
         type: string
         enum:
-          - "TaskNotFound"
+          - 'TaskNotFound'
     PostTaskError:
       type: array
       items:
         type: string
         enum:
-          - "FieldRequired"
+          - 'FieldRequired'
