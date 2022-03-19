@@ -286,6 +286,14 @@ paths:
         - 'Task'
       description: Add new task
       operationId: createNewTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+            example:
+              title: 'Fix Button Component'
+              description: 'debugging with border red 1px, and change layer order between the container'
       responses:
         201:
           description: Task created and inserted with valid token
