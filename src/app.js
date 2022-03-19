@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: off */
-
+const cors = require('cors');
 const express = require('express');
 const { json } = require('body-parser');
 const serverRouter = require('./routes');
@@ -8,6 +8,7 @@ const exceptionsMiddleware = require('./middlewares/exceptions');
 
 app.disable('x-powered-by');
 app.use(json());
+app.use(cors());
 
 // Add Welcome for root path on all HTTP verb
 app.all('/', (req, res) => {
@@ -29,7 +30,10 @@ app.use(exceptionsMiddleware);
 
 // if route not found, and exceptions not thrown handle with 404 middleware
 app.use((req, res) => {
-  res.status(404).send({ status: 'failed', message: 'Endpoint not found!' });
+  res.status(404).send({
+    status: 'failed',
+    message: 'Endpoint not found or HTTP verb method not supported!',
+  });
 });
 
 module.exports = app;

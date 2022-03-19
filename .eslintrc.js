@@ -14,7 +14,7 @@ module.exports = {
   rules: {
     'import/newline-after-import': ['off'],
     indent: ['error', 2],
-    'prettier/prettier': ['error'],
+    'prettier/prettier': ['off'],
     'prefer-const': ['error'],
     'no-var': ['error'],
     'no-new-object': ['error'],
