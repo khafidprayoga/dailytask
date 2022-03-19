@@ -14,6 +14,7 @@ After that you can start installing node packages with `yarn`,
 create `.env` and generate secret access and refresh token,
 and setup the Postgres database services.
 
+On postgres database, you need enable `uuid-oosp` extensions
 ### Footnote
 
 In my public API, i have deployed on AWS Lightsail and set the server time to **ASIA/JAKARTA (WIB) UTC+7**.
