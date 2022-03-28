@@ -1,18 +1,15 @@
-const taskEndpoint = require('express').Router();
-const protectedResourceMiddleware = require('../../middlewares/protectedResource');
-const TaskControllers = require('../../controllers/task');
+module.exports = (Router, protectedResource, Controllers) => {
+  const taskEndpoint = Router();
 
-taskEndpoint
-  .route('/')
-  .post([protectedResourceMiddleware, TaskControllers.postTaskHandler])
-  .get([protectedResourceMiddleware, TaskControllers.getAllTaskHandler]);
+  taskEndpoint
+    .route('/')
+    .post([protectedResource, Controllers.postTaskHandler])
+    .get([protectedResource, Controllers.getAllTaskHandler]);
 
-taskEndpoint
-  .route('/:taskId')
-  .get([protectedResourceMiddleware, TaskControllers.getSpecifiedTaskHandler])
-  .delete([
-    protectedResourceMiddleware,
-    TaskControllers.deleteSpecifiedTaskHandler,
-  ]);
+  taskEndpoint
+    .route('/:taskId')
+    .get([protectedResource, Controllers.getSpecifiedTaskHandler])
+    .delete([protectedResource, Controllers.deleteSpecifiedTaskHandler]);
 
-module.exports = taskEndpoint;
+  return taskEndpoint;
+};

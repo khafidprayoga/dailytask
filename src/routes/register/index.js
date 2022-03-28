@@ -1,5 +1,7 @@
-const registerEndpoint = require('express').Router();
-const RegisterControllers = require('../../controllers/register');
+module.exports = (Router, Controllers) => {
+  const registerEndpoint = Router();
 
-registerEndpoint.route('/').post(RegisterControllers.postHandler);
-module.exports = registerEndpoint;
+  registerEndpoint.route('/').post(Controllers.postHandler);
+
+  return registerEndpoint;
+};

@@ -1,10 +1,11 @@
-const loginEndpoint = require('express').Router();
-const LoginControllers = require('../../controllers/login');
+module.exports = (Router, Controllers) => {
+  const loginEndpoint = Router();
 
-loginEndpoint
-  .route('/')
-  .post(LoginControllers.postHandler)
-  .put(LoginControllers.putHandler)
-  .delete(LoginControllers.deleteHandler);
+  loginEndpoint
+    .route('/')
+    .post(Controllers.postHandler)
+    .put(Controllers.putHandler)
+    .delete(Controllers.deleteHandler);
 
-module.exports = loginEndpoint;
+  return loginEndpoint;
+};
